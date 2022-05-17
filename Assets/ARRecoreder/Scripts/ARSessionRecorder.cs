@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
 #if UNITY_ANDROID
+using System;
 using UnityEngine.XR.ARCore;
 #endif
 
@@ -41,6 +42,8 @@ namespace ARRecorder
             }
 
             using var recordingConfig = new ArRecordingConfig(subsystem.session);
+            mp4path = Path.Combine(Application.persistentDataPath,
+                $"arcore-session{DateTime.Now:yyyyMMddHHHmmss}.mp4");
             recordingConfig.SetMp4DatasetFilePath(subsystem.session, mp4path);
 
             var screenRotation = Screen.orientation switch
