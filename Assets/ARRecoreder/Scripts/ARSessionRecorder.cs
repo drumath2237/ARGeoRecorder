@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
@@ -16,12 +15,13 @@ namespace ARRecorder
 
         private string mp4path = null;
 
+
         private void Awake()
         {
             mp4path = Path.Combine(Application.persistentDataPath, "arcore-session.mp4");
         }
 
-        public void OnStartRecord()
+        public void ToggleRecording()
         {
 #if UNITY_ANDROID
             if (arSession.subsystem is not ARCoreSessionSubsystem subsystem)
@@ -29,25 +29,60 @@ namespace ARRecorder
                 return;
             }
 
-
-            var isPlayingOrRecording = subsystem.playbackStatus.Playing() || subsystem.recordingStatus.Recording();
-            if (isPlayingOrRecording)
+            if (subsystem.recordingStatus.Recording())
             {
-                // todo: recording停止処理を淹れてもいいかも
+                subsystem.StopRecording();
                 return;
             }
 
-            var finishedPlayingAndRecording = subsystem.playbackStatus == ArPlaybackStatus.Finished &&
-                                              subsystem.recordingStatus == ArRecordingStatus.None;
-            if (!finishedPlayingAndRecording)
+            if (subsystem.playbackStatus == ArPlaybackStatus.Finished)
             {
-                return;
+                subsystem.StopPlayback();
             }
 
             using var recordingConfig = new ArRecordingConfig(subsystem.session);
             recordingConfig.SetMp4DatasetFilePath(subsystem.session, mp4path);
 
+            var screenRotation = Screen.orientation switch
+            {
+                ScreenOrientation.Portrait => 0,
+                ScreenOrientation.LandscapeLeft => 90,
+                ScreenOrientation.PortraitUpsideDown => 180,
+                ScreenOrientation.LandscapeRight => 270,
+                _ => 0
+            };
+            recordingConfig.SetRecordingRotation(subsystem.session, screenRotation);
 
+            subsystem.StartRecording(recordingConfig);
+#endif
+        }
+
+
+        public void TogglePlayback()
+        {
+#if UNITY_ANDROID
+            if (arSession.subsystem is not ARCoreSessionSubsystem subsystem)
+            {
+                return;
+            }
+
+            if (subsystem.playbackStatus.Playing())
+            {
+                subsystem.StopPlayback();
+                return;
+            }
+
+            if (subsystem.playbackStatus == ArPlaybackStatus.Finished)
+            {
+                subsystem.StopPlayback();
+            }
+
+            if (!File.Exists(mp4path))
+            {
+                return;
+            }
+
+            subsystem.StartPlayback(mp4path);
 #endif
         }
     }
