@@ -63,3 +63,5 @@ crashlytics-build.properties
 
 
 .idea/
+
+ProjectSettings/ARCoreExtensionsProjectSettings.json

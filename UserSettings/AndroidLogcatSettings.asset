@@ -2,8 +2,8 @@
     "m_SelectedDeviceId": "13061JECB07108",
     "m_SelectedPackage": {
         "deviceId": "13061JECB07108",
-        "name": "com.DefaultCompany.ARRecorder",
-        "processId": 32236,
+        "name": "com.drumath2237.ARRecorder",
+        "processId": 18868,
         "exited": false
     },
     "m_SelectedPriority": 0,
@@ -12,6 +12,12 @@
             "deviceId": "13061JECB07108",
             "name": "com.DefaultCompany.ARRecorder",
             "processId": 32236,
+            "exited": false
+        },
+        {
+            "deviceId": "13061JECB07108",
+            "name": "com.drumath2237.ARRecorder",
+            "processId": 18868,
             "exited": false
         }
     ],
