@@ -11,15 +11,14 @@ using UnityEngine.XR.ARCore;
 
 namespace ARRecorder
 {
-    public record RecordAndPlaybackStatus(bool IsRecording, bool IsPlaying);
-    
     public class ARSessionRecorder : MonoBehaviour
     {
         [SerializeField] private ARSession arSession;
 
         private string mp4path = null;
 
-        public Action<RecordAndPlaybackStatus> OnStatusChanged = null;
+        public Action<bool> OnRecordingStatusChanged = null;
+        public Action<bool> OnPlaybackStatusChanged = null;
 
 
         private void Awake()
@@ -38,13 +37,14 @@ namespace ARRecorder
             if (subsystem.recordingStatus.Recording())
             {
                 subsystem.StopRecording();
-                OnStatusChanged?.Invoke(new RecordAndPlaybackStatus(false, false));
+                OnRecordingStatusChanged?.Invoke(false);
                 return;
             }
 
             if (subsystem.playbackStatus == ArPlaybackStatus.Finished)
             {
                 subsystem.StopPlayback();
+                OnPlaybackStatusChanged?.Invoke(false);
             }
 
             using var recordingConfig = new ArRecordingConfig(subsystem.session);
@@ -63,8 +63,9 @@ namespace ARRecorder
             recordingConfig.SetRecordingRotation(subsystem.session, screenRotation);
 
             subsystem.StartRecording(recordingConfig);
-            
-            OnStatusChanged?.Invoke(new RecordAndPlaybackStatus(true, false));
+
+            OnRecordingStatusChanged?.Invoke(true);
+
 #endif
         }
 
@@ -80,12 +81,15 @@ namespace ARRecorder
             if (subsystem.playbackStatus.Playing())
             {
                 subsystem.StopPlayback();
+                OnPlaybackStatusChanged?.Invoke(false);
                 return;
             }
 
             if (subsystem.playbackStatus == ArPlaybackStatus.Finished)
             {
                 subsystem.StopPlayback();
+                OnPlaybackStatusChanged?.Invoke(false);
+                return;
             }
 
             if (!File.Exists(mp4path))
@@ -94,15 +98,9 @@ namespace ARRecorder
             }
 
             subsystem.StartPlayback(mp4path);
+
+            OnPlaybackStatusChanged?.Invoke(true);
 #endif
         }
-    }
-}
-
-namespace System.Runtime.CompilerServices
-{
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    internal class IsExternalInit
-    {
     }
 }
