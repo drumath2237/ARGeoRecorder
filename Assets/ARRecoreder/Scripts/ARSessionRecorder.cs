@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
+using System.IO;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
@@ -10,11 +11,15 @@ using UnityEngine.XR.ARCore;
 
 namespace ARRecorder
 {
+    public record RecordAndPlaybackStatus(bool IsRecording, bool IsPlaying);
+    
     public class ARSessionRecorder : MonoBehaviour
     {
         [SerializeField] private ARSession arSession;
 
         private string mp4path = null;
+
+        public Action<RecordAndPlaybackStatus> OnStatusChanged = null;
 
 
         private void Awake()
@@ -33,6 +38,7 @@ namespace ARRecorder
             if (subsystem.recordingStatus.Recording())
             {
                 subsystem.StopRecording();
+                OnStatusChanged?.Invoke(new RecordAndPlaybackStatus(false, false));
                 return;
             }
 
@@ -57,6 +63,8 @@ namespace ARRecorder
             recordingConfig.SetRecordingRotation(subsystem.session, screenRotation);
 
             subsystem.StartRecording(recordingConfig);
+            
+            OnStatusChanged?.Invoke(new RecordAndPlaybackStatus(true, false));
 #endif
         }
 
@@ -88,5 +96,13 @@ namespace ARRecorder
             subsystem.StartPlayback(mp4path);
 #endif
         }
+    }
+}
+
+namespace System.Runtime.CompilerServices
+{
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    internal class IsExternalInit
+    {
     }
 }
