@@ -8,6 +8,8 @@ namespace ARRecorder
         [SerializeField] private TextMeshProUGUI playButtonText = null;
         [SerializeField] private TextMeshProUGUI recordButtonText = null;
 
+        [SerializeField] private TextMeshProUGUI logMessagesText;
+
         [SerializeField] private ARSessionRecorder arSessionRecorder;
 
         private void OnEnable()
@@ -19,6 +21,7 @@ namespace ARRecorder
 
             arSessionRecorder.OnRecordingStatusChanged += UpdateText_OnRecordingStatusChanged;
             arSessionRecorder.OnPlaybackStatusChanged += UpdateText_OnPlaybackStatusChanged;
+            arSessionRecorder.OnSendMessage += AddLogMessage_OnSendMessage;
         }
 
         private void OnDisable()
@@ -30,9 +33,10 @@ namespace ARRecorder
 
             arSessionRecorder.OnRecordingStatusChanged -= UpdateText_OnRecordingStatusChanged;
             arSessionRecorder.OnPlaybackStatusChanged -= UpdateText_OnPlaybackStatusChanged;
+            arSessionRecorder.OnSendMessage -= AddLogMessage_OnSendMessage;
         }
 
-        void UpdateText_OnRecordingStatusChanged(bool isRecording)
+        private void UpdateText_OnRecordingStatusChanged(bool isRecording)
         {
             if (!recordButtonText)
             {
@@ -42,7 +46,7 @@ namespace ARRecorder
             recordButtonText.text = isRecording ? "Stop Recording" : "Start Recording";
         }
 
-        void UpdateText_OnPlaybackStatusChanged(bool isPlayback)
+        private void UpdateText_OnPlaybackStatusChanged(bool isPlayback)
         {
             if (!playButtonText)
             {
@@ -50,6 +54,16 @@ namespace ARRecorder
             }
 
             playButtonText.text = isPlayback ? "Stop Playback" : "Start Playback";
+        }
+
+        private void AddLogMessage_OnSendMessage(string message)
+        {
+            if (!logMessagesText)
+            {
+                return;
+            }
+
+            logMessagesText.text = message + "\n\n" + logMessagesText.text;
         }
 
         public void OnRecordingButtonClicked()

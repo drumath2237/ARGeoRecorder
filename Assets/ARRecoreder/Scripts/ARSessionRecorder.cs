@@ -17,8 +17,10 @@ namespace ARRecorder
 
         private string mp4path = null;
 
-        public Action<bool> OnRecordingStatusChanged = null;
-        public Action<bool> OnPlaybackStatusChanged = null;
+        public event Action<bool> OnRecordingStatusChanged = null;
+        public event Action<bool> OnPlaybackStatusChanged = null;
+
+        public event Action<string> OnSendMessage = null;
 
 
         private void Awake()
@@ -31,6 +33,7 @@ namespace ARRecorder
 #if UNITY_ANDROID
             if (arSession.subsystem is not ARCoreSessionSubsystem subsystem)
             {
+                OnSendMessage?.Invoke("!!!AR Session is not ARCore Session");
                 return;
             }
 
@@ -38,12 +41,16 @@ namespace ARRecorder
             {
                 subsystem.StopRecording();
                 OnRecordingStatusChanged?.Invoke(false);
+                
+                OnSendMessage?.Invoke($"Stopped recording and saved to {mp4path}");
+
                 return;
             }
 
             if (subsystem.playbackStatus == ArPlaybackStatus.Finished)
             {
                 subsystem.StopPlayback();
+                OnSendMessage?.Invoke("Stopped playback");
                 OnPlaybackStatusChanged?.Invoke(false);
             }
 
@@ -65,6 +72,8 @@ namespace ARRecorder
             subsystem.StartRecording(recordingConfig);
 
             OnRecordingStatusChanged?.Invoke(true);
+            
+            OnSendMessage?.Invoke("Start recording");
 
 #endif
         }
@@ -75,6 +84,7 @@ namespace ARRecorder
 #if UNITY_ANDROID
             if (arSession.subsystem is not ARCoreSessionSubsystem subsystem)
             {
+                OnSendMessage?.Invoke("!!!AR Session is not ARCore Session");
                 return;
             }
 
@@ -82,6 +92,7 @@ namespace ARRecorder
             {
                 subsystem.StopPlayback();
                 OnPlaybackStatusChanged?.Invoke(false);
+                OnSendMessage?.Invoke("Stopped playback");
                 return;
             }
 
@@ -89,17 +100,22 @@ namespace ARRecorder
             {
                 subsystem.StopPlayback();
                 OnPlaybackStatusChanged?.Invoke(false);
+                OnSendMessage?.Invoke("Stopped playback");
+
                 return;
             }
 
             if (!File.Exists(mp4path))
             {
+                OnSendMessage?.Invoke($"!!!cannot find file path {mp4path}");
                 return;
             }
 
             subsystem.StartPlayback(mp4path);
 
             OnPlaybackStatusChanged?.Invoke(true);
+            
+            OnSendMessage?.Invoke("Start playback");
 #endif
         }
     }
