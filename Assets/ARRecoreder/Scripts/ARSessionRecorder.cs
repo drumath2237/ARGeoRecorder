@@ -2,9 +2,9 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using System;
 
 #if UNITY_ANDROID
-using System;
 using UnityEngine.XR.ARCore;
 #endif
 
