@@ -30,6 +30,11 @@ Geospatial APIの詳細な設定については[公式ドキュメント](https:
 Build Settingsにて、プラットフォームがAndroidになっていない場合は切り替えて、ビルドをしてください。
 `Assets\ARRecoreder\Scenes\main.unity`がメインのシーンになります。
 
+### AR Sessionの記録
+
+Recordingを停止すると自動的にセッションをローカルファイルに記録します。
+ファイルはAndroid端末内の、`Android\data\com.drumath2237.ARRecorder\files`
+に保存されます。
 
 ## Contact
 
