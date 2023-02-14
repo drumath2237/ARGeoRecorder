@@ -5,8 +5,8 @@ namespace ARRecorder
 {
     public class RecorderView : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI playButtonText = null;
-        [SerializeField] private TextMeshProUGUI recordButtonText = null;
+        [SerializeField] private TextMeshProUGUI playButtonText;
+        [SerializeField] private TextMeshProUGUI recordButtonText;
 
         [SerializeField] private TextMeshProUGUI logMessagesText;
 

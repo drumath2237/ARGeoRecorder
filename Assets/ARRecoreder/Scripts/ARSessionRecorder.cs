@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using System;
@@ -15,17 +14,17 @@ namespace ARRecorder
     {
         [SerializeField] private ARSession arSession;
 
-        private string mp4path = null;
+        private string _mp4Path;
 
-        public event Action<bool> OnRecordingStatusChanged = null;
-        public event Action<bool> OnPlaybackStatusChanged = null;
+        public event Action<bool> OnRecordingStatusChanged;
+        public event Action<bool> OnPlaybackStatusChanged;
 
-        public event Action<string> OnSendMessage = null;
+        public event Action<string> OnSendMessage;
 
 
         private void Awake()
         {
-            mp4path = Path.Combine(Application.persistentDataPath, "arcore-session.mp4");
+            _mp4Path = Path.Combine(Application.persistentDataPath, "arcore-session.mp4");
         }
 
         public void ToggleRecording()
@@ -41,8 +40,8 @@ namespace ARRecorder
             {
                 subsystem.StopRecording();
                 OnRecordingStatusChanged?.Invoke(false);
-                
-                OnSendMessage?.Invoke($"Stopped recording and saved to {mp4path}");
+
+                OnSendMessage?.Invoke($"Stopped recording and saved to {_mp4Path}");
 
                 return;
             }
@@ -55,9 +54,9 @@ namespace ARRecorder
             }
 
             using var recordingConfig = new ArRecordingConfig(subsystem.session);
-            mp4path = Path.Combine(Application.persistentDataPath,
+            _mp4Path = Path.Combine(Application.persistentDataPath,
                 $"arcore-session{DateTime.Now:yyyyMMddHHHmmss}.mp4");
-            recordingConfig.SetMp4DatasetFilePath(subsystem.session, mp4path);
+            recordingConfig.SetMp4DatasetFilePath(subsystem.session, _mp4Path);
 
             var screenRotation = Screen.orientation switch
             {
@@ -72,7 +71,7 @@ namespace ARRecorder
             subsystem.StartRecording(recordingConfig);
 
             OnRecordingStatusChanged?.Invoke(true);
-            
+
             OnSendMessage?.Invoke("Start recording");
 
 #endif
@@ -105,16 +104,16 @@ namespace ARRecorder
                 return;
             }
 
-            if (!File.Exists(mp4path))
+            if (!File.Exists(_mp4Path))
             {
-                OnSendMessage?.Invoke($"!!!cannot find file path {mp4path}");
+                OnSendMessage?.Invoke($"!!!cannot find file path {_mp4Path}");
                 return;
             }
 
-            subsystem.StartPlayback(mp4path);
+            subsystem.StartPlayback(_mp4Path);
 
             OnPlaybackStatusChanged?.Invoke(true);
-            
+
             OnSendMessage?.Invoke("Start playback");
 #endif
         }
