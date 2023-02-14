@@ -8,35 +8,35 @@ ARCore Geospatial API に対応した ARSession を ARCore Recording & Playback 
 
 ## Tested Environment
 
-- Unity 2021.3.2f1
-- ARFoundation 4.2.3
-- ARCore Extensions 1.31.0
+- Unity 2021.3.4f1
+- ARFoundation 4.2.7
+- ARCore Extensions 1.35.0
 - Android 12(Google Pixel 4a 5G)
 
 ## Settings & Usage
 
-### Geospatial API設定
+### Geospatial API 設定
 
-Project Settings > ARCore Extensions > Optional Featuresから
-Geospatialにチェックを入れます。
+Project Settings > ARCore Extensions > Optional Features から
+Geospatial にチェックを入れます。
 
 ![img](https://storage.googleapis.com/zenn-user-upload/edefb5137292-20220513.png)
 
-また、GCPで有効化したAndroid API Keyを入力します。
-Geospatial APIの詳細な設定については[公式ドキュメント](https://developers.google.com/ar/develop/unity-arf/geospatial/developer-guide-android?hl=ja)をご覧ください。
+また、GCP で有効化した Android API Key を入力します。
+Geospatial API の詳細な設定については[公式ドキュメント](https://developers.google.com/ar/develop/unity-arf/geospatial/developer-guide-android?hl=ja)をご覧ください。
 
 ### ビルド
 
-Build Settingsにて、プラットフォームがAndroidになっていない場合は切り替えて、ビルドをしてください。
+Build Settings にて、プラットフォームが Android になっていない場合は切り替えて、ビルドをしてください。
 `Assets\ARRecoreder\Scenes\main.unity`がメインのシーンになります。
 
-### AR Sessionの記録
+### AR Session の記録
 
-Recordingを停止すると自動的にセッションをローカルファイルに記録します。
-ファイルはAndroid端末内の、`Android\data\com.drumath2237.ARRecorder\files`
+Recording を停止すると自動的にセッションをローカルファイルに記録します。
+ファイルは Android 端末内の、`Android\data\com.drumath2237.ARRecorder\files`
 に保存されます。
 
-## Contact
+## Author
 
-何かございましたら、[にー兄さんのTwitter](https://twitter.com/ninisan_drumath)
-までご連絡ください。
+[にー兄さん / Kaito Tsutsumi](https://twitter.com/ninisan_drumath)
+
