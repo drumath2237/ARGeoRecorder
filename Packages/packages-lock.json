@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "com.google.ar.core.arfoundation.extensions": {
-      "version": "https://github.com/google-ar/arcore-unity-extensions.git",
+      "version": "https://github.com/google-ar/arcore-unity-extensions.git#v1.35.0",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -9,7 +9,7 @@
         "com.unity.xr.arcore": "4.1.5",
         "com.unity.xr.arkit": "4.1.5"
       },
-      "hash": "b9496c2059453594d324761d5cfc00494b29cc4a"
+      "hash": "404c696d5790cd405ab6a64294e08d887d4e8409"
     },
     "com.unity.editorcoroutines": {
       "version": "1.0.0",
